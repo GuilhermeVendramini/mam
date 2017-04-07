@@ -1,0 +1,5 @@
+name: Multisite Manager
+type: module
+description: Manager multisite
+core: 8.x
+package: Custom

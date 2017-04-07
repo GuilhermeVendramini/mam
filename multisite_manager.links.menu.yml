@@ -1,0 +1,19 @@
+
+# Domain entity menu items definition
+entity.domain_entity.collection:
+  title: 'Domain list'
+  route_name: entity.domain_entity.collection
+  description: 'List Domain'
+  parent: system.admin_structure
+
+domain_entity.admin.structure.settings:
+  title: Domain settings
+  description: 'Configure Domain entities'
+  route_name: domain_entity.settings
+  parent: system.admin_structure
+
+multisite_manager_form.settings:
+  title: Multisite Manager Actions
+  route_name: multisite_manager.multisite_manager_form
+  description: 'Manage Actions to Multisite'
+  parent: system.admin_config_development

@@ -1,0 +1,26 @@
+add domain entity entities:
+  title: 'Create new Domain entity entities'
+
+administer domain entity entities:
+  title: 'Administer Domain entity entities'
+  description: 'Allow to access the administration form to configure Domain entity entities.'
+  restrict access: true
+
+delete domain entity entities:
+  title: 'Delete Domain entity entities'
+
+edit domain entity entities:
+  title: 'Edit Domain entity entities'
+
+access domain entity overview:
+  title: 'Access the Domain entity overview page'
+
+view published domain entity entities:
+  title: 'View published Domain entity entities'
+
+view unpublished domain entity entities:
+  title: 'View unpublished Domain entity entities'
+
+administer multisite actions:
+  title: 'Administer Multisite Manager Actions'
+  description: 'Allow to access the administration form to add multisite actions.'

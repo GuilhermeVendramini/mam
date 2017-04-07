@@ -1,0 +1,5 @@
+entity.domain_entity.add_form:
+  route_name: entity.domain_entity.add_form
+  title: 'Add Domain entity'
+  appears_on:
+    - entity.domain_entity.collection
