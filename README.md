@@ -17,6 +17,6 @@ Register a new domain in "Manage - Estrucure - Domain list"  (admin/structure/do
 Manager the actions in "Manage - Configuration - Multisite Manager Actions" (admin/config/multisite-manager).
 
 ```sh
-$ todo exempla
+$ TODO example
 ```
 

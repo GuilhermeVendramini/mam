@@ -94,6 +94,7 @@ class MultisiteManagerForm extends FormBase {
         '#header' => array(
           $this->t('Domains'),
           $this->t('Action'),
+          $this->t('Expire'),
           $this->t('Created'),
         ),
       ];
@@ -126,9 +127,13 @@ class MultisiteManagerForm extends FormBase {
     $form['action_fieldset']['action'] = [
       '#type' => 'select',
       '#title' => $this->t('Action'),
-      '#options' => [
-        'cr' => 'Clear cache',
-        'cron' =>'Run cron'],
+      '#options' => $this->getOptionsAction(),
+    ];
+    $form['action_fieldset']['claim_time'] = [
+      '#type' => 'number',
+      '#min' => 0,
+      '#title' => $this->t('Claim time'),
+      '#description' => $this->t('Put the time in cesonds. Ex.: "60" for 1 minute, "3600" for one hour. This time is only valid if cron runs during this time period.'),
     ];
     $form['action_fieldset']['submit'] = [
         '#type' => 'submit',
@@ -139,6 +144,28 @@ class MultisiteManagerForm extends FormBase {
     return $form;
   }
 
+  /**
+   * Retrieves the options action.
+   */
+  public function getOptionsAction() {
+    $actions = [
+      'cr' => $this->t('Clear cache'),
+      'cron' => $this->t('Run cron'),
+      'sset system.maintenance_mode 1' => $this->t('Put site into maintenance mode'),
+      'sset system.maintenance_mode 0' => $this->t('Take out site maintenance mode'),
+      'custom' => $this->t('Custom drush command')];
+
+    return $actions;
+  }
+
+  /**
+   * Validate add action.
+   *
+   * @param array $form
+   *   Form definition array.
+   * @param \Drupal\Core\Form\FormStateInterface $form_state
+   *   Form state object.
+   */
   public function actionValidate(array &$form, FormStateInterface $form_state) {
     $domains = array_filter($form_state->getValue('domains'), 'is_string');
     if(empty($domains)) {
@@ -146,6 +173,14 @@ class MultisiteManagerForm extends FormBase {
     }
   }
 
+  /**
+   * Validate delete action.
+   *
+   * @param array $form
+   *   Form definition array.
+   * @param \Drupal\Core\Form\FormStateInterface $form_state
+   *   Form state object.
+   */
   public function deleteActionValidate(array &$form, FormStateInterface $form_state) {
     $action = array_filter($form_state->getValue('action_status'), 'is_string');
     if(empty($action)) {
@@ -159,14 +194,20 @@ class MultisiteManagerForm extends FormBase {
   public function submitForm(array &$form, FormStateInterface $form_state) {
     $action = $form_state->getValue('action');
     $domains = $form_state->getValue('domains');
+    $claim_time = $form_state->getValue('claim_time') ?: 0;
+
     $data['domains'] = $domains;
     $data['action'] = $action;
 
     $queue = \Drupal::queue('multisite_queue');
     $queue->createQueue();
     $queue->createItem($data);
+    $queue->claimItem($claim_time);
   }
 
+  /**
+   * Retrieves the options domain.
+   */
   public function getOptionsDomain() {
     $query = $this->database->select('domain_entity', 'm');
     $query->fields('m', ['domain','name','id']);
@@ -185,13 +226,16 @@ class MultisiteManagerForm extends FormBase {
     return $domains;
   }
 
+  /**
+   * Retrieves the options processed.
+   */
   public function getOptionsQueue() {
     $items = $this->retrieveQueue('multisite_queue');
     $result = array_map(array($this, 'processQueueItemForTable'), $items);
 
     $queues = array();
     foreach ($result as $value) {
-      $queues[$value['item_id']] = array($value['domains'], $value['action'], $value['created']);
+      $queues[$value['item_id']] = array($value['domains'], $value['action'], $value['expire'], $value['created']);
     }
 
     return $queues;
@@ -262,11 +306,11 @@ class MultisiteManagerForm extends FormBase {
       $item['expire'] = $this->t('Unclaimed');
     }
     
-    $item['created'] = date('r', $item['created']);
     $items = unserialize($item['data']);
     $domians = implode(',', array_filter($items['domains'], 'is_string'));
-    $action = $items['action'];
-    
+    $actions = $this->getOptionsAction();
+    $action = $actions[$items['action']]->__toString() . ' (' .$items['action'] . ')';
+    $item['created'] = date('r', $item['created']);
     $item['domains'] = $domians;
     $item['action'] =  $action;
 
