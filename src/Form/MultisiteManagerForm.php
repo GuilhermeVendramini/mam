@@ -129,6 +129,16 @@ class MultisiteManagerForm extends FormBase {
       '#title' => $this->t('Action'),
       '#options' => $this->getOptionsAction(),
     ];
+    $form['action_fieldset']['custom'] = [
+      '#type' => 'textfield',
+      '#title' => $this->t('Custom drush command'),
+      '#description' => $this->t('Put only your command without "dush". Ex.: "user-block 1"'),
+      '#states' => [
+        'visible' => [
+          ':input[name="action"]' => ['value' => 'custom'],
+        ],
+      ],
+    ];
     $form['action_fieldset']['claim_time'] = [
       '#type' => 'number',
       '#min' => 0,
@@ -171,6 +181,12 @@ class MultisiteManagerForm extends FormBase {
     if(empty($domains)) {
       $form_state->setErrorByName('domains', $this->t('Please, select a domain to add action.'));
     }
+
+    $action = $form_state->getValue('action');
+    $custom = $form_state->getValue('custom');
+    if($action == 'custom' && !$custom) {
+      $form_state->setErrorByName('custom', $this->t('Please, set a custom drush command.'));
+    }
   }
 
   /**
@@ -198,6 +214,10 @@ class MultisiteManagerForm extends FormBase {
 
     $data['domains'] = $domains;
     $data['action'] = $action;
+
+    if($action == 'custom') {
+      $data['action'] = $form_state->getValue('custom');
+    }
 
     $queue = \Drupal::queue('multisite_queue');
     $queue->createQueue();
@@ -309,7 +329,14 @@ class MultisiteManagerForm extends FormBase {
     $items = unserialize($item['data']);
     $domians = implode(',', array_filter($items['domains'], 'is_string'));
     $actions = $this->getOptionsAction();
-    $action = $actions[$items['action']]->__toString() . ' (' .$items['action'] . ')';
+
+    if (!array_key_exists($items['action'],$actions)) {
+      $action_value = 'custom';
+    }else {
+      $action_value = $items['action'];
+    }
+
+    $action = $actions[$action_value]->__toString() . ' (' .$items['action'] . ')';
     $item['created'] = date('r', $item['created']);
     $item['domains'] = $domians;
     $item['action'] =  $action;

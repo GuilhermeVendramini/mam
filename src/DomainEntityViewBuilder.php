@@ -26,17 +26,24 @@ class DomainEntityViewBuilder extends EntityViewBuilder {
     foreach ($entities as $id => $entity) {
       $domain = $entity->get('domain')->__get('value');
  
-      $build[$id]['enabled-modules'] = array(
+      $build[$id]['modules'] = array(
         '#type' => 'details',
-        '#title' => t('Enabled modules'),
+        '#title' => t('Modules'),
+        '#prefix' => '<div class="modules">',
+        '#suffix' => '</div>',
+      );
+
+      $build[$id]['modules']['enabled-modules'] = array(
+        '#type' => 'details',
+        '#title' => t('Enabled'),
         '#markup' =>  $this->enabledModules($domain),
         '#prefix' => '<div class="enabled-modules">',
         '#suffix' => '</div>',
       );
       
-      $build[$id]['not-installed-modules'] = array(
+      $build[$id]['modules']['not-installed-modules'] = array(
         '#type' => 'details',
-        '#title' => t('Not installed modules'),
+        '#title' => t('Not installed'),
         '#markup' => $this->notInstalledModules($domain),
         '#prefix' => '<div class="not-installed-modules">',
         '#suffix' => '</div>',

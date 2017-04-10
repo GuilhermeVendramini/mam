@@ -17,10 +17,11 @@ class MultisiteQueue extends QueueWorkerBase {
    * {@inheritdoc}
    */
   public function processItem($data) {
-    $domains = implode(',' , $data['domains']);
+    $domains_items = array_filter($data['domains'], 'is_string'); 
+    $domains = implode(',' , $domains_items);
     $action = $data['action'];
-    
-    foreach ($data['domains'] as $domain) {
+
+    foreach ($domains_items as $domain) {
       exec('drush ' . $action . ' -l ' . $domain);
     }
     
