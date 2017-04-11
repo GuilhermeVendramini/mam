@@ -9,7 +9,7 @@ use Drupal\Core\Queue\QueueWorkerBase;
  * @QueueWorker(
  *   id = "multisite_queue",
  *   title = @Translation("Learning task worker: multisite queue"),
- *   cron = {"time" = 90}
+ *   cron = {"time" = 120}
  * )
  */
 class MultisiteQueue extends QueueWorkerBase {
@@ -17,15 +17,12 @@ class MultisiteQueue extends QueueWorkerBase {
    * {@inheritdoc}
    */
   public function processItem($data) {
-    $domains_items = array_filter($data['domains'], 'is_string'); 
-    $domains = implode(',' , $domains_items);
+    $domain = $data['domain'];
     $action = $data['action'];
 
-    foreach ($domains_items as $domain) {
-      exec('drush ' . $action . ' -l ' . $domain);
-    }
+    exec('drush ' . $action . ' -l ' . $domain);    
     
-    $message = t('Cron multisite executed! Domains: @domains - Action: @action', array('@domains' => $domains, '@action' => $action));
+    $message = t('Cron multisite executed! Domain: @domain - Action: @action', array('@domain' => $domain, '@action' => $action));
     \Drupal::logger('cron')->notice($message);
   }
 }
