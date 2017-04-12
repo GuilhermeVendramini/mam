@@ -28,42 +28,12 @@ class DomainEntityViewBuilder extends EntityViewBuilder {
       
       $build[$id]['manager'] = array(
         '#type' => 'fieldset',
-        '#title' => t('Multisite Manager Actions'),
+        '#title' => t('Multisite manager actions'),
         '#prefix' => '<div class="multisite-manager">',
         '#suffix' => '</div>',
       );
       $build[$id]['manager']['form'] =  \Drupal::formBuilder()->getForm('Drupal\multisite_manager\Form\MultisiteManagerForm', $domain);
     }
   }
-  
-  // public function enabledModules($domain) {
-  //   exec("drush pm-list --type=Module --status=enabled -l $domain --format=list", $output);
-  //   $header = array($this->t('Modules'));
-  //   $data = $this->tableStyle($header, $output);
-    
-  //   return($data);
-  // }
-  
-  // public function notInstalledModules($domain) {
-  //   exec("drush pm-list --type=Module --status='not installed' -l $domain --format=list", $output);
-  //   $header = array($this->t('Modules'));
-  //   $data = $this->tableStyle($header, $output);
-    
-  //   return($data);
-  // }
-  
-  // public function tableStyle($header, $data){
-
-  //   foreach ($data as $module) {
-  //     $row[] = (array) $module;
-  //   }
-    
-  //   $output = ['#type' => 'table',
-  //     '#header' => $header,
-  //     '#rows' => $row,
-  //   ];
- 
-  //   return drupal_render($output);
-  // }
 
 }

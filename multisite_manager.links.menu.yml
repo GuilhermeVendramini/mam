@@ -13,7 +13,7 @@ domain_entity.admin.structure.settings:
   parent: system.admin_structure
 
 multisite_manager_form.settings:
-  title: Multisite Manager Actions
+  title: Multisite manager actions
   route_name: multisite_manager.multisite_manager_form
-  description: 'Manage Actions to Multisite'
+  description: 'Manage actions to multisite'
   parent: system.admin_config_development

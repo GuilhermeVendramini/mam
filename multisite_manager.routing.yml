@@ -3,7 +3,7 @@ multisite_manager.multisite_manager_form:
   path: '/admin/config/multisite-manager'
   defaults:
     _form: '\Drupal\multisite_manager\Form\MultisiteManagerForm'
-    _title: 'Multisite Manager Actions'
+    _title: 'Multisite manager actions'
   requirements:
     _permission: 'administer multisite actions'
   

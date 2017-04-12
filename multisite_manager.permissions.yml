@@ -22,5 +22,5 @@ view unpublished domain entity entities:
   title: 'View unpublished Domain entity entities'
 
 administer multisite actions:
-  title: 'Administer Multisite Manager Actions'
+  title: 'Administer Multisite manager actions'
   description: 'Allow to access the administration form to add multisite actions.'
