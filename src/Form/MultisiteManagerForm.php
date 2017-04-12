@@ -12,8 +12,10 @@ use Drupal\Core\Database\Connection;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 use Drupal\Core\Url;
 use Drupal\Component\Serialization\Json;
-//use Drupal\Core\Cache\Cache;
 use Drupal\Core\Cache\CacheBackendInterface;
+
+use Drupal\Core\Ajax\AjaxResponse;
+use Drupal\Core\Ajax\ReplaceCommand;
 
 /**
  * Class MultisiteManagerForm.
@@ -122,13 +124,13 @@ class MultisiteManagerForm extends FormBase {
         '#type' => 'submit',
         '#validate' => ['::deleteActionValidate'],
         '#value' => $this->t('Delete selected items'),
-        '#submit' => array(array($this, 'submitDeleteItems')),
+        '#submit' => ['::submitDeleteItems'],
       ];
     } else {
-      $form['status_fieldset']['status'] = array(
+      $form['status_fieldset']['status'] = [
         '#type' => 'markup',
         '#markup' => $this->t('There are no items in the queue.'),
-      );
+      ];
     }
     $form['action_fieldset'] = [
       '#type' => 'details',
@@ -150,13 +152,6 @@ class MultisiteManagerForm extends FormBase {
       '#type' => 'select',
       '#title' => $this->t('Action'),
       '#options' => $this->getOptionsAction(),
-      '#ajax' => [
-        'callback' => [$this, 'actionAjax'],
-        'wrapper' => 'action-ajax',
-        'progress' => [
-          'type' => 'throbber',
-          'message' => t('Loading...'),],
-      ],
     ];
     $form['action_fieldset']['details_module'] = [
       '#type' => 'details',
@@ -171,16 +166,17 @@ class MultisiteManagerForm extends FormBase {
         ],
       ],
     ];
-    $form['action_fieldset']['details_module']['modules'] = [
-      '#type' => 'tableselect',
-      '#options' => $this->getModules($this->currentDomain),
-      '#header' => [
+    $header = [
         'name' => $this->t('Name'),
         'version' => $this->t('Version'),
-        'package' => $this->t('Package')],
-      '#prefix' => '<div id="action-ajax">' . $this->t('Note: This list not difere modules enabled and disabled.'),
-      '#suffix' => '</div>',
-      '#empty' => $this->t('No modules found.'),
+        'package' => $this->t('Package'),];
+    if($this->currentDomain) {
+      $header['status'] = $this->t('Status');
+    }
+    $form['action_fieldset']['details_module']['modules'] = [
+      '#type' => 'tableselect',
+      '#options' =>  $this->getModules($this->currentDomain),
+      '#header' => $header,
     ];
     $form['action_fieldset']['custom'] = [
       '#type' => 'textfield',
@@ -205,14 +201,6 @@ class MultisiteManagerForm extends FormBase {
     ];
 
     return $form;
-  }
-
-  public function actionAjax(array $form, FormStateInterface $form_state){
-    $action = $form_state->getValue('action');
-    if ($action == 'pmu' || $action == 'en') {
-      $form['action_fieldset']['details_module']['modules']['#options'] = $this->getModules($this->currentDomain);
-      return $form['action_fieldset']['details_module']['modules'];
-    }
   }
 
   /**
@@ -340,14 +328,10 @@ class MultisiteManagerForm extends FormBase {
   }
 
   public function getModules($domain) {
-    if ($cache = $this->cacheBackend->get('multisite_manager_modules' . $domain)) {
-      $modules = $cache->data;
-    }else {
-      $command = $domain ? ' -l ' . $domain : '';
-      exec("drush pm-list --type=Module --format=php" . $command, $modules);
-      $this->cacheBackend->set('multisite_manager_modules' . $domain, $modules, CacheBackendInterface::CACHE_PERMANENT);
-    }
-     
+    $command = $domain ? ' -l ' . $domain : '';
+    exec("drush pm-list --type=Module --format=php" . $command, $modules);
+    $this->cacheBackend->set('multisite_manager_modules' . $domain, $modules, CacheBackendInterface::CACHE_PERMANENT);
+
     if(count($modules)) {
       $output = unserialize($modules[0]);
       return($output);
