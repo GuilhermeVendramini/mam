@@ -13,9 +13,7 @@ use Symfony\Component\DependencyInjection\ContainerInterface;
 use Drupal\Core\Url;
 use Drupal\Component\Serialization\Json;
 use Drupal\Core\Cache\CacheBackendInterface;
-
-use Drupal\Core\Ajax\AjaxResponse;
-use Drupal\Core\Ajax\ReplaceCommand;
+use Drupal\Core\Cache\Cache;
 
 /**
  * Class MultisiteManagerForm.
@@ -65,6 +63,14 @@ class MultisiteManagerForm extends FormBase {
    * @var string
    */
   protected $currentDomain;
+
+  /**
+   * The current domain id when in a Domain Entity
+   *
+   * @var string
+   */
+  protected $currentDomainId;
+
   
   /**
    * Constructor.
@@ -99,8 +105,9 @@ class MultisiteManagerForm extends FormBase {
   /**
    * {@inheritdoc}
    */
-  public function buildForm(array $form, FormStateInterface $form_state, string $domain = NULL) {
+  public function buildForm(array $form, FormStateInterface $form_state, $domain = NULL, $domain_id = NULL) {
     $this->currentDomain = $domain;
+    $this->currentDomainId = $domain_id;
     $actions = $this->getOptionsQueue();
 
     $form['status_fieldset'] = [
@@ -162,7 +169,8 @@ class MultisiteManagerForm extends FormBase {
         'visible' => [
           ':input[name="action"]' => [
             ['value' => 'pmu'],
-            ['value' => 'en']],
+            ['value' => 'en'],
+          ],
         ],
       ],
     ];
@@ -175,8 +183,9 @@ class MultisiteManagerForm extends FormBase {
     }
     $form['action_fieldset']['details_module']['modules'] = [
       '#type' => 'tableselect',
-      '#options' =>  $this->getModules($this->currentDomain),
+      '#options' =>  $this->getModules(),
       '#header' => $header,
+      '#prefix' => 'Note: After run cron, clean the cache to see the modules status change'
     ];
     $form['action_fieldset']['custom'] = [
       '#type' => 'textfield',
@@ -212,13 +221,16 @@ class MultisiteManagerForm extends FormBase {
         'cr' => $this->t('Clear cache'),
         'cron' => $this->t('Run cron'),
         'sset system.maintenance_mode 1' => $this->t('Put site into maintenance mode'),
-        'sset system.maintenance_mode 0' => $this->t('Retire site maintenance mode'),],
+        'sset system.maintenance_mode 0' => $this->t('Retire site maintenance mode'),
+      ],
       'Modules' => [
         'en' => $this->t('Enable module'),
-        'pmu' => $this->t('Uninstall module'),],
+        'pmu' => $this->t('Uninstall module'),
+      ],
       'Custom' => [
-        'custom' => $this->t('Custom drush command'),],
-      ];
+        'custom' => $this->t('Custom drush command'),
+      ],
+    ];
 
     return $actions;
   }
@@ -327,17 +339,24 @@ class MultisiteManagerForm extends FormBase {
     return $domains;
   }
 
-  public function getModules($domain) {
-    $command = $domain ? ' -l ' . $domain : '';
-    exec("drush pm-list --type=Module --format=php" . $command, $modules);
-    $this->cacheBackend->set('multisite_manager_modules' . $domain, $modules, CacheBackendInterface::CACHE_PERMANENT);
-
-    if(count($modules)) {
-      $output = unserialize($modules[0]);
-      return($output);
+  public function getModules() {
+    $domain = $this->currentDomain;
+    $domain_id = $this->currentDomainId;
+    $cid = 'multisite_manager_modules_domain' . $domain_id;
+    $data = NULL;
+    if ($cache = \Drupal::cache()->get($cid)) {
+      $data = $cache->data;
     }
-    
-    return NULL;
+    else {
+      $command = $domain ? ' -l ' . $domain : '';
+      exec("/home/guilherme/.composer/vendor/drush/drush/drush.php pm-list --type=Module --format=php" . $command . ' 2>&1', $modules);
+      if(count($modules)) {
+        $data = unserialize($modules[0]);
+      }
+      \Drupal::cache()->set($cid, $data, Cache::PERMANENT, ['domain_entity:' . $domain_id]);
+    }
+
+    return $data;
   }
 
   /**
