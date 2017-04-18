@@ -42,6 +42,7 @@ class DomainEntityViewBuilder extends EntityViewBuilder {
   }
 
   public function getStatus($domain, $domain_id) {
+    $drush = \Drupal::config('multisite_manager.settings')->get('drush');
     $cid = 'multisite_manager:status:domain' . $domain_id;
     $data = NULL;
     if ($cache = \Drupal::cache()->get($cid)) {
@@ -49,8 +50,8 @@ class DomainEntityViewBuilder extends EntityViewBuilder {
     }
     else {
       $command = $domain ? ' -l ' . $domain : '';
-      exec("/home/guilherme/.composer/vendor/drush/drush/drush.php status --format=php" . $command . ' 2>&1', $status);
-      if(count($status)) {
+      exec($drush . ' status --format=php' . $command . ' 2>&1', $status);
+      if(count($status) > 0) {
         $items = unserialize($status[0]);
         foreach ($items as $key => $value) {
           if(is_array($value)) {

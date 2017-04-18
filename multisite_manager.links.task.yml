@@ -20,3 +20,14 @@ entity.domain_entity.delete_form:
   title: Delete
   weight: 10
 
+# Multisite manager actions and settings
+multisite_manager.actions:
+  route_name: multisite_manager.multisite_manager_form
+  title: 'Actions'
+  base_route: multisite_manager.multisite_manager_form
+
+multisite_manager.settings:
+  route_name: multisite_manager.multisite_manager_settings_form
+  title: 'Settings'
+  base_route: multisite_manager.multisite_manager_form
+

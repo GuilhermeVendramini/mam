@@ -14,6 +14,7 @@ use Drupal\Core\Url;
 use Drupal\Component\Serialization\Json;
 use Drupal\Core\Cache\CacheBackendInterface;
 use Drupal\Core\Cache\Cache;
+use Drupal\Core\Serialization\Yaml;
 
 /**
  * Class MultisiteManagerForm.
@@ -71,6 +72,13 @@ class MultisiteManagerForm extends FormBase {
    */
   protected $currentDomainId;
 
+  /**
+   * Config from multisite manager settings
+   *
+   * @var \Drupal::config('multisite_manager.settings')
+   */
+  protected $settings;
+
   
   /**
    * Constructor.
@@ -86,6 +94,7 @@ class MultisiteManagerForm extends FormBase {
     $this->database = $database;
     $this->cron = $cron;
     $this->cacheBackend = $cache_backend;
+    $this->settings = \Drupal::config('multisite_manager.settings');
   }
 
   /**
@@ -109,7 +118,7 @@ class MultisiteManagerForm extends FormBase {
     $this->currentDomain = $domain;
     $this->currentDomainId = $domain_id;
     $actions = $this->getOptionsQueue();
-
+    
     $form['status_fieldset'] = [
       '#type' => 'details',
       '#title' => $this->t('Action status'),
@@ -232,6 +241,12 @@ class MultisiteManagerForm extends FormBase {
       ],
     ];
 
+    $custom_actions = Yaml::decode($this->settings->get('custom_command'));
+    if(count($custom_actions) > 0) {
+      foreach ($custom_actions as $key_action => $action) {
+        $actions[$key_action] = $action;
+      }
+    }
     return $actions;
   }
 
@@ -342,6 +357,7 @@ class MultisiteManagerForm extends FormBase {
   public function getModules() {
     $domain = $this->currentDomain;
     $domain_id = $this->currentDomainId;
+    $drush = $this->settings->get('drush');
     $cid = 'multisite_manager_modules_domain' . $domain_id;
     $data = NULL;
     if ($cache = \Drupal::cache()->get($cid)) {
@@ -349,8 +365,8 @@ class MultisiteManagerForm extends FormBase {
     }
     else {
       $command = $domain ? ' -l ' . $domain : '';
-      exec("/home/guilherme/.composer/vendor/drush/drush/drush.php pm-list --type=Module --format=php" . $command . ' 2>&1', $modules);
-      if(count($modules)) {
+      exec($drush . " pm-list --type=Module --format=php" . $command . ' 2>&1', $modules);
+      if(count($modules) > 0) {
         $data = unserialize($modules[0]);
       }
       \Drupal::cache()->set($cid, $data, Cache::PERMANENT, ['domain_entity:' . $domain_id]);
