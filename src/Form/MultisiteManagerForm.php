@@ -365,7 +365,7 @@ class MultisiteManagerForm extends FormBase {
     }
     else {
       $command = $domain ? ' -l ' . $domain : '';
-      exec($drush . " pm-list --type=Module --format=php" . $command . ' 2>&1', $modules);
+      exec($drush . ' pm-list --type=Module --format=php' . $command . ' 2>&1', $modules);
       if(count($modules) > 0) {
         $data = unserialize($modules[0]);
       }
