@@ -21,7 +21,7 @@ class MultisiteQueue extends QueueWorkerBase {
     $action = $data['action'];
     $drush = \Drupal::config('multisite_manager.settings')->get('drush');
 
-    exec($drush . ' ' . $action . ' -l ' . $domain);    
+    exec($drush . ' ' . $action . ' -l ' . $domain . ' 2>&1');    
     
     $message = t('Cron multisite executed! Domain: @domain - Action: @action', array('@domain' => $domain, '@action' => $action));
     \Drupal::logger('cron')->notice($message);
