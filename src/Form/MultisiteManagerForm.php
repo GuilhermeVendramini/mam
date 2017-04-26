@@ -406,12 +406,6 @@ class MultisiteManagerForm extends FormBase {
   public function retrieveQueue($queue_name) {
     $items = array();
 
-    // This example requires the default queue implementation to work,
-    // so we bail if some other queue implementation has been installed.
-    if (!$this->doesQueueUseDb()) {
-      return $items;
-    }
-
     // Make sure there are queue items available. The queue will not create our
     // database table if there are no items.
     if ($this->queueFactory->get($queue_name)->numberOfItems() >= 1) {
@@ -426,16 +420,6 @@ class MultisiteManagerForm extends FormBase {
     }
 
     return $items;
-  }
-
-  /**
-   * Check if we are using the default database queue.
-   *
-   * @return bool
-   *   TRUE if we are using the default database queue implementation.
-   */
-  protected function doesQueueUseDb() {
-    return $this->queueType == 'queue.database';
   }
 
   /**
