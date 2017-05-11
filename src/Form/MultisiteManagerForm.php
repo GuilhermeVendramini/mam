@@ -475,9 +475,9 @@ class MultisiteManagerForm extends FormBase {
       $query->condition('item_id', $items_id, 'IN');
       $query->execute();
       
-      drupal_set_message(t('Items deleted!'));
+      drupal_set_message($this->t('Items deleted!'));
     } catch (Exception $e) {
-      drupal_set_message(t('Error deleting items @error', array('@error' => $e)), 'error');
+      drupal_set_message($this->t('Error deleting items @error', array('@error' => $e)), 'error');
     }
 
     $form_state->setRebuild();
