@@ -73,11 +73,11 @@ class MultisiteManagerForm extends FormBase {
   protected $currentDomainId;
 
   /**
-   * Config from multisite manager settings
+   * Config from multisite manager config
    *
    * @var \Drupal::config('multisite_manager.settings')
    */
-  protected $settings;
+  protected $config;
 
   
   /**
@@ -94,7 +94,7 @@ class MultisiteManagerForm extends FormBase {
     $this->database = $database;
     $this->cron = $cron;
     $this->cacheBackend = $cache_backend;
-    $this->settings = \Drupal::config('multisite_manager.settings');
+    $this->config = \Drupal::config('multisite_manager.settings');
   }
 
   /**
@@ -241,7 +241,7 @@ class MultisiteManagerForm extends FormBase {
       ],
     ];
 
-    $custom_actions = Yaml::decode($this->settings->get('custom_command'));
+    $custom_actions = Yaml::decode($this->config->get('custom_command'));
     if(count($custom_actions) > 0) {
       foreach ($custom_actions as $key_action => $action) {
         $actions[$key_action] = $action;
@@ -357,7 +357,7 @@ class MultisiteManagerForm extends FormBase {
   public function getModules() {
     $domain = $this->currentDomain;
     $domain_id = $this->currentDomainId;
-    $drush = $this->settings->get('drush');
+    $drush = $this->config->get('drush');
     $cid = 'multisite_manager_modules_domain' . $domain_id;
     $data = NULL;
     if ($cache = \Drupal::cache()->get($cid)) {
