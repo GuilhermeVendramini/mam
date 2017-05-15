@@ -1,8 +1,8 @@
-## Multisite Manager
+# Multisite Manager
 
 With this module you can manager all multisite instalations in an unique site.
 
-# Features
+## Features
 
 - Run cron
 - Clean cache
@@ -12,7 +12,7 @@ With this module you can manager all multisite instalations in an unique site.
 - Add new drush commands
 
 
-# How this work
+## How this work
 
 Register a new domain in "Manage - Estrucure - Domain list"  (admin/structure/domain-entity).
 
