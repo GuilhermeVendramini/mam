@@ -15,6 +15,7 @@ use Drupal\Component\Serialization\Json;
 use Drupal\Core\Cache\CacheBackendInterface;
 use Drupal\Core\Cache\Cache;
 use Drupal\Core\Serialization\Yaml;
+use Drupal\Core\Config\ConfigFactory;
 
 /**
  * Class MultisiteManagerForm.
@@ -75,7 +76,7 @@ class MultisiteManagerForm extends FormBase {
   /**
    * Config from multisite manager config
    *
-   * @var \Drupal::config('multisite_manager.settings')
+   * @var \Drupal\Core\Config\ConfigManager
    */
   protected $config;
 
@@ -88,20 +89,20 @@ class MultisiteManagerForm extends FormBase {
    * @param \Drupal\Core\Database\Connection $database
    *   The database connection to be used.
    */
-  public function __construct(QueueFactory $queue_factory, Connection $database, CronInterface $cron, Settings $settings, CacheBackendInterface $cache_backend) {
+  public function __construct(QueueFactory $queue_factory, Connection $database, CronInterface $cron, Settings $settings, CacheBackendInterface $cache_backend, ConfigFactory $config) {
     $this->queueFactory = $queue_factory;
     $this->queueType = $settings->get('queue_default', 'queue.database');
     $this->database = $database;
     $this->cron = $cron;
     $this->cacheBackend = $cache_backend;
-    $this->config = \Drupal::config('multisite_manager.settings');
+    $this->config = $config->get('multisite_manager.settings');
   }
 
   /**
    * {@inheritdoc}
    */
   public static function create(ContainerInterface $container) {
-    return new static($container->get('queue'), $container->get('database'), $container->get('cron'), $container->get('settings'), $container->get('cache.default'));
+    return new static($container->get('queue'), $container->get('database'), $container->get('cron'), $container->get('settings'), $container->get('cache.default'), $container->get('config.factory'));
   }
 
   /**
@@ -326,7 +327,7 @@ class MultisiteManagerForm extends FormBase {
   public function addActionQueue(array $domains, array $data, string $claim_time) {
     foreach ($domains as $domain) {
       $data['domain'] = $domain;
-      $queue = \Drupal::queue('multisite_queue');
+      $queue = $this->queueFactory->get('multisite_queue', FALSE);
       $queue->createQueue();
       $queue->createItem($data);
       $queue->claimItem($claim_time);
