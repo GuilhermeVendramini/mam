@@ -211,7 +211,7 @@ class MultisiteManagerForm extends FormBase {
       '#type' => 'number',
       '#min' => 0,
       '#title' => $this->t('Claim time'),
-      '#description' => $this->t('Put the time in cesonds. Ex.: "60" for 1 minute, "3600" for one hour. This time is only valid if cron runs during this time period.'),
+      '#description' => $this->t('Put the time in seconds. Ex.: "60" for 1 minute, "3600" for one hour. This time is only valid if cron runs during this time period.'),
     ];
     $form['action_fieldset']['submit'] = [
         '#type' => 'submit',
