@@ -21,8 +21,6 @@ use Drupal\Core\Render\Element;
  */
 function template_preprocess_domain_entity(array &$variables) {
   // Fetch DomainEntity Entity Object.
-  $domain_entity = $variables['elements']['#domain_entity'];
-
   // Helpful $content variable for templates.
   foreach (Element::children($variables['elements']) as $key) {
     $variables['content'][$key] = $variables['elements'][$key];

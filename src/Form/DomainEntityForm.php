@@ -19,8 +19,6 @@ class DomainEntityForm extends ContentEntityForm {
     /* @var $entity \Drupal\multisite_manager\Entity\DomainEntity */
     $form = parent::buildForm($form, $form_state);
 
-    $entity = $this->entity;
-
     return $form;
   }
 

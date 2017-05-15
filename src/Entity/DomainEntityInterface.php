@@ -13,8 +13,6 @@ use Drupal\user\EntityOwnerInterface;
  */
 interface DomainEntityInterface extends  ContentEntityInterface, EntityChangedInterface, EntityOwnerInterface {
 
-  // Add get/set methods for your configuration properties here.
-
   /**
    * Gets the Domain entity name.
    *
