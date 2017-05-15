@@ -1,6 +1,6 @@
 <?php
 
-namespace Drupal\multisite_manager;
+namespace Drupal\mam;
 
 use Drupal\Core\Entity\EntityAccessControlHandler;
 use Drupal\Core\Entity\EntityInterface;
@@ -10,7 +10,7 @@ use Drupal\Core\Access\AccessResult;
 /**
  * Access controller for the Domain entity entity.
  *
- * @see \Drupal\multisite_manager\Entity\DomainEntity.
+ * @see \Drupal\mam\Entity\DomainEntity.
  */
 class DomainEntityAccessControlHandler extends EntityAccessControlHandler {
 
@@ -18,7 +18,7 @@ class DomainEntityAccessControlHandler extends EntityAccessControlHandler {
    * {@inheritdoc}
    */
   protected function checkAccess(EntityInterface $entity, $operation, AccountInterface $account) {
-    /** @var \Drupal\multisite_manager\Entity\DomainEntityInterface $entity */
+    /** @var \Drupal\mam\Entity\DomainEntityInterface $entity */
     switch ($operation) {
       case 'view':
         if (!$entity->isPublished()) {

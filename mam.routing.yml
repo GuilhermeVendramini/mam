@@ -1,17 +1,17 @@
 
-multisite_manager.multisite_manager_form:
+mam.mam_form:
   path: '/admin/config/multisite-manager'
   defaults:
-    _form: '\Drupal\multisite_manager\Form\MultisiteManagerForm'
-    _title: 'Multisite manager actions'
+    _form: '\Drupal\mam\Form\MultisiteManagerForm'
+    _title: 'Multisite actions manager'
   requirements:
     _permission: 'administer multisite actions'
   
 
-multisite_manager.multisite_manager_settings_form:
+mam.mam_settings_form:
   path: '/admin/config/multisite-manager/settings'
   defaults:
-    _form: '\Drupal\multisite_manager\Form\MultisiteManagerSettingsForm'
+    _form: '\Drupal\mam\Form\MultisiteManagerSettingsForm'
     _title: 'Multisite manager settings'
   requirements:
     _permission: 'administer multisite actions'

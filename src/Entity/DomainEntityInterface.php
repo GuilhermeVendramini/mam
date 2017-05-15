@@ -1,6 +1,6 @@
 <?php
 
-namespace Drupal\multisite_manager\Entity;
+namespace Drupal\mam\Entity;
 
 use Drupal\Core\Entity\ContentEntityInterface;
 use Drupal\Core\Entity\EntityChangedInterface;
@@ -9,7 +9,7 @@ use Drupal\user\EntityOwnerInterface;
 /**
  * Provides an interface for defining Domain entity entities.
  *
- * @ingroup multisite_manager
+ * @ingroup mam
  */
 interface DomainEntityInterface extends  ContentEntityInterface, EntityChangedInterface, EntityOwnerInterface {
 
@@ -27,7 +27,7 @@ interface DomainEntityInterface extends  ContentEntityInterface, EntityChangedIn
    * @param string $name
    *   The Domain entity name.
    *
-   * @return \Drupal\multisite_manager\Entity\DomainEntityInterface
+   * @return \Drupal\mam\Entity\DomainEntityInterface
    *   The called Domain entity entity.
    */
   public function setName($name);
@@ -65,7 +65,7 @@ interface DomainEntityInterface extends  ContentEntityInterface, EntityChangedIn
    * @param int $timestamp
    *   The Domain entity creation timestamp.
    *
-   * @return \Drupal\multisite_manager\Entity\DomainEntityInterface
+   * @return \Drupal\mam\Entity\DomainEntityInterface
    *   The called Domain entity entity.
    */
   public function setCreatedTime($timestamp);
@@ -86,7 +86,7 @@ interface DomainEntityInterface extends  ContentEntityInterface, EntityChangedIn
    * @param bool $published
    *   TRUE to set this Domain entity to published, FALSE to set it to unpublished.
    *
-   * @return \Drupal\multisite_manager\Entity\DomainEntityInterface
+   * @return \Drupal\mam\Entity\DomainEntityInterface
    *   The called Domain entity entity.
    */
   public function setPublished($published);

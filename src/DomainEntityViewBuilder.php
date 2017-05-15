@@ -2,10 +2,10 @@
 
 /**
  * @file
- * Contains \Drupal\multisite_manager.
+ * Contains \Drupal\mam.
  */
 
-namespace Drupal\multisite_manager;
+namespace Drupal\mam;
 
 use Drupal\Core\Entity\EntityViewBuilder;
 use Drupal\Core\Cache\Cache;
@@ -33,17 +33,17 @@ class DomainEntityViewBuilder extends EntityViewBuilder {
       ];
       $build[$id]['manager'] = [
         '#type' => 'details',
-        '#title' => t('Multisite manager actions'),
+        '#title' => t('Multisite actions manager'),
         '#prefix' => '<div class="multisite-manager">',
         '#suffix' => '</div>',
       ];
-      $build[$id]['manager']['form'] =  \Drupal::formBuilder()->getForm('Drupal\multisite_manager\Form\MultisiteManagerForm', $domain, $domain_id);
+      $build[$id]['manager']['form'] =  \Drupal::formBuilder()->getForm('Drupal\mam\Form\MultisiteManagerForm', $domain, $domain_id);
     }
   }
 
   public function getStatus($domain, $domain_id) {
-    $drush = \Drupal::config('multisite_manager.settings')->get('drush');
-    $cid = 'multisite_manager:status:domain' . $domain_id;
+    $drush = \Drupal::config('mam.settings')->get('drush');
+    $cid = 'mam:status:domain' . $domain_id;
     $data = NULL;
     if ($cache = \Drupal::cache()->get($cid)) {
       $data = $cache->data;

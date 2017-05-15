@@ -1,6 +1,6 @@
 <?php
 
-namespace Drupal\multisite_manager;
+namespace Drupal\mam;
 
 use Drupal\Core\Entity\EntityTypeInterface;
 use Drupal\Core\Entity\Routing\AdminHtmlRouteProvider;
@@ -72,7 +72,7 @@ class DomainEntityHtmlRouteProvider extends AdminHtmlRouteProvider {
       $route = new Route("/admin/structure/{$entity_type->id()}/settings");
       $route
         ->setDefaults([
-          '_form' => 'Drupal\multisite_manager\Form\DomainEntitySettingsForm',
+          '_form' => 'Drupal\mam\Form\DomainEntitySettingsForm',
           '_title' => "{$entity_type->getLabel()} settings",
         ])
         ->setRequirement('_permission', $entity_type->getAdminPermission())

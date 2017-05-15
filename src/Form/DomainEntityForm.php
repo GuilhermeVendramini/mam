@@ -1,6 +1,6 @@
 <?php
 
-namespace Drupal\multisite_manager\Form;
+namespace Drupal\mam\Form;
 
 use Drupal\Core\Entity\ContentEntityForm;
 use Drupal\Core\Form\FormStateInterface;
@@ -8,7 +8,7 @@ use Drupal\Core\Form\FormStateInterface;
 /**
  * Form controller for Domain entity edit forms.
  *
- * @ingroup multisite_manager
+ * @ingroup mam
  */
 class DomainEntityForm extends ContentEntityForm {
 
@@ -16,7 +16,7 @@ class DomainEntityForm extends ContentEntityForm {
    * {@inheritdoc}
    */
   public function buildForm(array $form, FormStateInterface $form_state) {
-    /* @var $entity \Drupal\multisite_manager\Entity\DomainEntity */
+    /* @var $entity \Drupal\mam\Entity\DomainEntity */
     $form = parent::buildForm($form, $form_state);
 
     return $form;

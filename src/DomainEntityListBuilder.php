@@ -1,6 +1,6 @@
 <?php
 
-namespace Drupal\multisite_manager;
+namespace Drupal\mam;
 
 use Drupal\Core\Entity\EntityInterface;
 use Drupal\Core\Entity\EntityListBuilder;
@@ -10,7 +10,7 @@ use Drupal\Core\Url;
 /**
  * Defines a class to build a listing of Domain entity entities.
  *
- * @ingroup multisite_manager
+ * @ingroup mam
  */
 class DomainEntityListBuilder extends EntityListBuilder {
 
@@ -29,7 +29,7 @@ class DomainEntityListBuilder extends EntityListBuilder {
    * {@inheritdoc}
    */
   public function buildRow(EntityInterface $entity) {
-    /* @var $entity \Drupal\multisite_manager\Entity\DomainEntity */
+    /* @var $entity \Drupal\mam\Entity\DomainEntity */
     $row['id'] = $entity->id();
     $row['name'] = $this->l(
       $entity->label(),

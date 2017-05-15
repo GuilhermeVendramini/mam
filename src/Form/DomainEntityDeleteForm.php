@@ -1,13 +1,13 @@
 <?php
 
-namespace Drupal\multisite_manager\Form;
+namespace Drupal\mam\Form;
 
 use Drupal\Core\Entity\ContentEntityDeleteForm;
 
 /**
  * Provides a form for deleting Domain entity entities.
  *
- * @ingroup multisite_manager
+ * @ingroup mam
  */
 class DomainEntityDeleteForm extends ContentEntityDeleteForm {
 

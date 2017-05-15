@@ -1,6 +1,6 @@
 <?php
 
-namespace Drupal\multisite_manager\Form;
+namespace Drupal\mam\Form;
 
 use Drupal\Core\Form\ConfigFormBase;
 use Drupal\Core\Form\FormStateInterface;
@@ -10,7 +10,7 @@ use Drupal\Component\Serialization\Exception\InvalidDataTypeException;
 /**
  * Class MultisiteManagerSettingsForm.
  *
- * @package Drupal\multisite_manager\Form
+ * @package Drupal\mam\Form
  */
 class MultisiteManagerSettingsForm extends ConfigFormBase {
 
@@ -18,7 +18,7 @@ class MultisiteManagerSettingsForm extends ConfigFormBase {
    * {@inheritdoc}
    */
   public function getFormId() {
-    return 'multisite_manager_settings_form';
+    return 'mam_settings_form';
   }
 
   /**
@@ -26,7 +26,7 @@ class MultisiteManagerSettingsForm extends ConfigFormBase {
    */
   protected function getEditableConfigNames() {
     return [
-      'multisite_manager.settings',
+      'mam.settings',
     ];
   }
 
@@ -34,7 +34,7 @@ class MultisiteManagerSettingsForm extends ConfigFormBase {
    * {@inheritdoc}
    */
   public function buildForm(array $form, FormStateInterface $form_state) {
-    $config = $this->config('multisite_manager.settings');
+    $config = $this->config('mam.settings');
     $form['drush'] = [
       '#type' => 'textfield',
       '#title' => $this->t('Drush'),
@@ -83,7 +83,7 @@ class MultisiteManagerSettingsForm extends ConfigFormBase {
   public function submitForm(array &$form, FormStateInterface $form_state) {
     parent::submitForm($form, $form_state);
 
-    $this->config('multisite_manager.settings')
+    $this->config('mam.settings')
       ->set('drush', $form_state->getValue('drush'))
       ->set('custom_command', $form_state->getValue('custom_command'))
       ->save();

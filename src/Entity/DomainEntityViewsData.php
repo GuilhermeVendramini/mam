@@ -1,6 +1,6 @@
 <?php
 
-namespace Drupal\multisite_manager\Entity;
+namespace Drupal\mam\Entity;
 
 use Drupal\views\EntityViewsData;
 

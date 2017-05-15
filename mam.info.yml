@@ -1,0 +1,7 @@
+name: Multisite Actions Manager
+type: module
+description: Manage the actions of all multisites in a single installation.
+core: 8.x
+package: Custom
+
+version: '8.x-1.x-dev'

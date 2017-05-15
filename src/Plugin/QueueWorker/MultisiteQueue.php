@@ -1,6 +1,6 @@
 <?php
 
-namespace Drupal\multisite_manager\Plugin\QueueWorker;
+namespace Drupal\mam\Plugin\QueueWorker;
 
 use Drupal\Core\Queue\QueueWorkerBase;
 /**
@@ -19,7 +19,7 @@ class MultisiteQueue extends QueueWorkerBase {
   public function processItem($data) {
     $domain = $data['domain'];
     $action = $data['action'];
-    $drush = \Drupal::config('multisite_manager.settings')->get('drush');
+    $drush = \Drupal::config('mam.settings')->get('drush');
 
     exec($drush . ' ' . $action . ' -l ' . $domain . ' 2>&1');    
     

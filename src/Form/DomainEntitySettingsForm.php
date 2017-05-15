@@ -1,6 +1,6 @@
 <?php
 
-namespace Drupal\multisite_manager\Form;
+namespace Drupal\mam\Form;
 
 use Drupal\Core\Form\FormBase;
 use Drupal\Core\Form\FormStateInterface;
@@ -8,9 +8,9 @@ use Drupal\Core\Form\FormStateInterface;
 /**
  * Class DomainEntitySettingsForm.
  *
- * @package Drupal\multisite_manager\Form
+ * @package Drupal\mam\Form
  *
- * @ingroup multisite_manager
+ * @ingroup mam
  */
 class DomainEntitySettingsForm extends FormBase {
 

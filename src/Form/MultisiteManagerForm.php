@@ -1,6 +1,6 @@
 <?php
 
-namespace Drupal\multisite_manager\Form;
+namespace Drupal\mam\Form;
 
 use Drupal\Core\Form\FormBase;
 use Drupal\Core\Form\FormStateInterface;
@@ -20,7 +20,7 @@ use Drupal\Core\Config\ConfigFactory;
 /**
  * Class MultisiteManagerForm.
  *
- * @package Drupal\multisite_manager\Form
+ * @package Drupal\mam\Form
  */
 class MultisiteManagerForm extends FormBase {
 
@@ -95,7 +95,7 @@ class MultisiteManagerForm extends FormBase {
     $this->database = $database;
     $this->cron = $cron;
     $this->cacheBackend = $cache_backend;
-    $this->config = $config->get('multisite_manager.settings');
+    $this->config = $config->get('mam.settings');
   }
 
   /**
@@ -109,7 +109,7 @@ class MultisiteManagerForm extends FormBase {
    * {@inheritdoc}
    */
   public function getFormId() {
-    return 'multisite_manager_form';
+    return 'mam_form';
   }
 
   /**
@@ -195,6 +195,7 @@ class MultisiteManagerForm extends FormBase {
       '#type' => 'tableselect',
       '#options' =>  $this->getModules(),
       '#header' => $header,
+      '#empty' => 'Modules not found.',
       '#prefix' => 'Note: After run cron, clean the cache to see the modules status change'
     ];
     $form['action_fieldset']['custom'] = [
@@ -359,8 +360,13 @@ class MultisiteManagerForm extends FormBase {
     $domain = $this->currentDomain;
     $domain_id = $this->currentDomainId;
     $drush = $this->config->get('drush');
-    $cid = 'multisite_manager_modules_domain' . $domain_id;
-    $data = NULL;
+    $cid = 'mam_modules_domain' . $domain_id;
+    $data = array();
+
+    if(empty($drush)) {
+      drupal_set_message($this->t('Set the drush installation in tab Settings'), 'warning');
+      return $data;
+    }
 
     if ($cache = $this->cacheBackend->get($cid)) {
       $data = $cache->data;

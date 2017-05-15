@@ -1,6 +1,6 @@
-# Multisite Manager
+# Multisite Actions Manager
 
-With this module you can manager all multisite instalations in an unique site.
+Manage the actions of all multisites in a single installation.
 
 ## Features
 
@@ -16,7 +16,7 @@ With this module you can manager all multisite instalations in an unique site.
 
 Register a new domain in "Manage - Estrucure - Domain list"  (admin/structure/domain-entity).
 
-Manager the actions in "Manage - Configuration - Multisite Manager Actions" (admin/config/multisite-manager).
+Manager the actions in "Manage - Configuration - Multisite Actions Manager" (admin/config/multisite-manager).
 
 All action will be executed by cron, with no performance problems.
 

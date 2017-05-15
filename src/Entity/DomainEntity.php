@@ -1,6 +1,6 @@
 <?php
 
-namespace Drupal\multisite_manager\Entity;
+namespace Drupal\mam\Entity;
 
 use Drupal\Core\Entity\EntityStorageInterface;
 use Drupal\Core\Field\BaseFieldDefinition;
@@ -12,25 +12,25 @@ use Drupal\user\UserInterface;
 /**
  * Defines the Domain entity entity.
  *
- * @ingroup multisite_manager
+ * @ingroup mam
  *
  * @ContentEntityType(
  *   id = "domain_entity",
  *   label = @Translation("Domain"),
  *   handlers = {
- *     "view_builder" = "Drupal\multisite_manager\DomainEntityViewBuilder",
- *     "list_builder" = "Drupal\multisite_manager\DomainEntityListBuilder",
- *     "views_data" = "Drupal\multisite_manager\Entity\DomainEntityViewsData",
+ *     "view_builder" = "Drupal\mam\DomainEntityViewBuilder",
+ *     "list_builder" = "Drupal\mam\DomainEntityListBuilder",
+ *     "views_data" = "Drupal\mam\Entity\DomainEntityViewsData",
  *
  *     "form" = {
- *       "default" = "Drupal\multisite_manager\Form\DomainEntityForm",
- *       "add" = "Drupal\multisite_manager\Form\DomainEntityForm",
- *       "edit" = "Drupal\multisite_manager\Form\DomainEntityForm",
- *       "delete" = "Drupal\multisite_manager\Form\DomainEntityDeleteForm",
+ *       "default" = "Drupal\mam\Form\DomainEntityForm",
+ *       "add" = "Drupal\mam\Form\DomainEntityForm",
+ *       "edit" = "Drupal\mam\Form\DomainEntityForm",
+ *       "delete" = "Drupal\mam\Form\DomainEntityDeleteForm",
  *     },
- *     "access" = "Drupal\multisite_manager\DomainEntityAccessControlHandler",
+ *     "access" = "Drupal\mam\DomainEntityAccessControlHandler",
  *     "route_provider" = {
- *       "html" = "Drupal\multisite_manager\DomainEntityHtmlRouteProvider",
+ *       "html" = "Drupal\mam\DomainEntityHtmlRouteProvider",
  *     },
  *   },
  *   base_table = "domain_entity",

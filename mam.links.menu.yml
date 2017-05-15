@@ -12,8 +12,8 @@ domain_entity.admin.structure.settings:
   route_name: domain_entity.settings
   parent: system.admin_structure
 
-multisite_manager_form.settings:
-  title: Multisite manager actions
-  route_name: multisite_manager.multisite_manager_form
+mam_form.settings:
+  title: Multisite actions manager
+  route_name: mam.mam_form
   description: 'Manage actions to multisite'
   parent: system.admin_config_development

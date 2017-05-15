@@ -1,6 +1,6 @@
 <?php
 
-namespace Drupal\multisite_manager\Tests;
+namespace Drupal\mam\Tests;
 
 use Drupal\Core\Url;
 use Drupal\simpletest\WebTestBase;
@@ -8,7 +8,7 @@ use Drupal\simpletest\WebTestBase;
 /**
  * Simple test to ensure that main page loads with module enabled.
  *
- * @group multisite_manager
+ * @group mam
  */
 class LoadTest extends WebTestBase{
 
@@ -17,7 +17,7 @@ class LoadTest extends WebTestBase{
    *
    * @var array
    */
-  public static $modules = ['multisite_manager'];
+  public static $modules = ['mam'];
 
   /**
    * A user with permission to administer site configuration.
