@@ -360,7 +360,8 @@ class MultisiteManagerForm extends FormBase {
     $drush = $this->config->get('drush');
     $cid = 'multisite_manager_modules_domain' . $domain_id;
     $data = NULL;
-    if ($cache = \Drupal::cache()->get($cid)) {
+
+    if ($cache = $this->cacheBackend->get($cid)) {
       $data = $cache->data;
     }
     else {
@@ -369,7 +370,7 @@ class MultisiteManagerForm extends FormBase {
       if(count($modules) > 0) {
         $data = unserialize($modules[0]);
       }
-      \Drupal::cache()->set($cid, $data, Cache::PERMANENT, ['domain_entity:' . $domain_id]);
+      $this->cacheBackend->set($cid, $data, Cache::PERMANENT, ['domain_entity:' . $domain_id]);
     }
 
     return $data;
