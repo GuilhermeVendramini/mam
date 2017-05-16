@@ -1,0 +1,7 @@
+mam.settings:
+  type: config_object
+  label: 'Mam settings'
+  mapping:
+    drush:
+      type: string
+      label: 'Drush command installation'

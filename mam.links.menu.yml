@@ -3,7 +3,7 @@
 entity.domain_entity.collection:
   title: 'Domain list'
   route_name: entity.domain_entity.collection
-  description: 'List Domain'
+  description: 'List all entities from type Domain'
   parent: system.admin_structure
 
 domain_entity.admin.structure.settings:

@@ -42,6 +42,7 @@ class MultisiteManagerSettingsForm extends ConfigFormBase {
       '#maxlength' => 100,
       '#size' => 100,
       '#default_value' => $config->get('drush'),
+      '#required' => TRUE
     ];
     $form['custom_command'] = [
       '#type' => 'textarea',

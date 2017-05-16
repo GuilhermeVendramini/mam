@@ -10,7 +10,7 @@ use Drupal\simpletest\WebTestBase;
  *
  * @group mam
  */
-class LoadTest extends WebTestBase{
+class MamControllerTest extends WebTestBase{
 
   /**
    * Modules to enable.
@@ -20,7 +20,7 @@ class LoadTest extends WebTestBase{
   public static $modules = ['mam'];
 
   /**
-   * A user with permission to administer site configuration.
+   * A user with permission to Administer Multisite actions manager.
    *
    * @var \Drupal\user\UserInterface
    */
@@ -31,15 +31,18 @@ class LoadTest extends WebTestBase{
    */
   protected function setUp() {
     parent::setUp();
-    $this->user = $this->drupalCreateUser(['administer site configuration']);
+    $this->user = $this->drupalCreateUser(['administer multisite actions']);
     $this->drupalLogin($this->user);
   }
 
   /**
-   * Tests that the home page loads with a 200 response.
+   * Tests that the administration page loads with a 200 response.
    */
-  public function testLoad() {
-    $this->drupalGet(Url::fromRoute('<front>'));
+  public function testMamController() {
+    $this->drupalGet(Url::fromRoute('mam.mam_form'));
+    $this->assertResponse(200);
+
+    $this->drupalGet(Url::fromRoute('mam.mam_settings_form'));
     $this->assertResponse(200);
   }
 
