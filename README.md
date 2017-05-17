@@ -14,9 +14,11 @@ Manage the actions of all multisites in a single installation.
 
 ## How this work
 
-Register a new domain in "Manage - Estrucure - Domain list"  (admin/structure/domain-entity).
+Register a new domain in:
+"Manage - Estrucure - Domain list"  (admin/structure/domain-entity).
 
-Manager the actions in "Manage - Configuration - Multisite Actions Manager" (admin/config/multisite-manager).
+Manager the actions in:
+"Manage - Configuration - Multisite Actions Manager" 
+(admin/config/multisite-manager).
 
 All action will be executed by cron, with no performance problems.
-

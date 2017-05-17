@@ -42,7 +42,7 @@ class MultisiteManagerSettingsForm extends ConfigFormBase {
       '#maxlength' => 100,
       '#size' => 100,
       '#default_value' => $config->get('drush'),
-      '#required' => TRUE
+      '#required' => TRUE,
     ];
     $form['custom_command'] = [
       '#type' => 'textarea',
@@ -51,22 +51,22 @@ class MultisiteManagerSettingsForm extends ConfigFormBase {
         Custom group:</br>
         &nbsp;cm1: Command 1</br>
         &nbsp;cm2: Command 2'
-    ),
+      ),
       '#rows' => 30,
       '#default_value' => $config->get('custom_command'),
     ];
 
     $form['submit'] = [
-        '#type' => 'submit',
-        '#value' => $this->t('Submit'),
+      '#type' => 'submit',
+      '#value' => $this->t('Submit'),
     ];
 
     return $form;
   }
 
   /**
-    * {@inheritdoc}
-    */
+   * {@inheritdoc}
+   */
   public function validateForm(array &$form, FormStateInterface $form_state) {
     parent::validateForm($form, $form_state);
 

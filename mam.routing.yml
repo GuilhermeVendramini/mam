@@ -15,4 +15,3 @@ mam.mam_settings_form:
     _title: 'Multisite manager settings'
   requirements:
     _permission: 'administer multisite actions'
-  

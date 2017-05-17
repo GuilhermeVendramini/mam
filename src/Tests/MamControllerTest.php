@@ -10,7 +10,7 @@ use Drupal\simpletest\WebTestBase;
  *
  * @group mam
  */
-class MamControllerTest extends WebTestBase{
+class MamControllerTest extends WebTestBase {
 
   /**
    * Modules to enable.

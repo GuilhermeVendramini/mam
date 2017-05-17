@@ -11,7 +11,7 @@ use Drupal\user\EntityOwnerInterface;
  *
  * @ingroup mam
  */
-interface DomainEntityInterface extends  ContentEntityInterface, EntityChangedInterface, EntityOwnerInterface {
+interface DomainEntityInterface extends ContentEntityInterface, EntityChangedInterface, EntityOwnerInterface {
 
   /**
    * Gets the Domain entity name.
@@ -84,7 +84,8 @@ interface DomainEntityInterface extends  ContentEntityInterface, EntityChangedIn
    * Sets the published status of a Domain entity.
    *
    * @param bool $published
-   *   TRUE to set this Domain entity to published, FALSE to set it to unpublished.
+   *   TRUE to set this Domain entity to published,
+   *   FALSE to set it to unpublished.
    *
    * @return \Drupal\mam\Entity\DomainEntityInterface
    *   The called Domain entity entity.

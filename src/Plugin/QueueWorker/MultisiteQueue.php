@@ -3,6 +3,7 @@
 namespace Drupal\mam\Plugin\QueueWorker;
 
 use Drupal\Core\Queue\QueueWorkerBase;
+
 /**
  * Processes Tasks for Learning.
  *
@@ -13,6 +14,7 @@ use Drupal\Core\Queue\QueueWorkerBase;
  * )
  */
 class MultisiteQueue extends QueueWorkerBase {
+
   /**
    * {@inheritdoc}
    */
@@ -20,10 +22,9 @@ class MultisiteQueue extends QueueWorkerBase {
     $domain = $data['domain'];
     $action = $data['action'];
     $drush = \Drupal::config('mam.settings')->get('drush');
-
-    exec($drush . ' ' . $action . ' -l ' . $domain . ' 2>&1');    
-    
-    $message = t('Cron multisite executed! Domain: @domain - Action: @action', array('@domain' => $domain, '@action' => $action));
+    exec($drush . ' ' . $action . ' -l ' . $domain . ' 2>&1');
+    $message = t('Cron multisite executed! Domain: @domain - Action: @action', ['@domain' => $domain, '@action' => $action]);
     \Drupal::logger('cron')->notice($message);
   }
+
 }

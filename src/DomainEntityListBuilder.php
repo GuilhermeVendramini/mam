@@ -34,9 +34,9 @@ class DomainEntityListBuilder extends EntityListBuilder {
     $row['name'] = $this->l(
       $entity->label(),
       new Url(
-        'entity.domain_entity.edit_form', array(
+        'entity.domain_entity.edit_form', [
           'domain_entity' => $entity->id(),
-        )
+        ]
       )
     );
     return $row + parent::buildRow($entity);

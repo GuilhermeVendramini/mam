@@ -30,4 +30,3 @@ mam.settings:
   route_name: mam.mam_settings_form
   title: 'Settings'
   base_route: mam.mam_form
-

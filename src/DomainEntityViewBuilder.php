@@ -1,10 +1,5 @@
 <?php
 
-/**
- * @file
- * Contains \Drupal\mam.
- */
-
 namespace Drupal\mam;
 
 use Drupal\Core\Entity\EntityViewBuilder;
@@ -37,11 +32,26 @@ class DomainEntityViewBuilder extends EntityViewBuilder {
         '#prefix' => '<div class="multisite-manager">',
         '#suffix' => '</div>',
       ];
-      $build[$id]['manager']['form'] =  \Drupal::formBuilder()->getForm('Drupal\mam\Form\MultisiteManagerForm', $domain, $domain_id);
+      $build[$id]['manager']['form'] = \Drupal::formBuilder()->getForm('Drupal\mam\Form\MultisiteManagerForm', $domain, $domain_id);
     }
   }
 
-  public function getStatus($domain, $domain_id) {
+  /**
+   * Parameters to get drush status.
+   *
+   * @param string $domain
+   *   Domain entity value.
+   * @param int $domain_id
+   *   Entity ID value.
+   */
+
+  /**
+   * Result drush status.
+   *
+   * @return string
+   *   Drush status result
+   */
+  public function getStatus(string $domain, int $domain_id) {
     $drush = \Drupal::config('mam.settings')->get('drush');
     $cid = 'mam:status:domain' . $domain_id;
     $data = NULL;
@@ -51,10 +61,10 @@ class DomainEntityViewBuilder extends EntityViewBuilder {
     else {
       $command = $domain ? ' -l ' . $domain : '';
       exec($drush . ' status --format=php' . $command . ' 2>&1', $status);
-      if(count($status) > 0) {
+      if (count($status) > 0) {
         $items = unserialize($status[0]);
         foreach ($items as $key => $value) {
-          if(is_array($value)) {
+          if (is_array($value)) {
             $value = implode(', ', $value);
             $items[$key] = $value;
           }
@@ -63,7 +73,7 @@ class DomainEntityViewBuilder extends EntityViewBuilder {
 
         $items_list = [
           '#theme' => 'item_list',
-          '#items' =>  $items,
+          '#items' => $items,
         ];
         $data = drupal_render($items_list);
       }

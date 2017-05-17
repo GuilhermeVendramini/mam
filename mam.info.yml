@@ -4,6 +4,7 @@ description: Manage the actions of all multisites in a single installation.
 core: 8.x
 package: Development
 
-version: '8.x-1.0'
+version: '8.x-1.x'
 core: '8.x'
 project: 'mam'
+configure: mam.mam_form

@@ -11,7 +11,6 @@ use Drupal\Core\CronInterface;
 use Drupal\Core\Database\Connection;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 use Drupal\Core\Url;
-use Drupal\Component\Serialization\Json;
 use Drupal\Core\Cache\CacheBackendInterface;
 use Drupal\Core\Cache\Cache;
 use Drupal\Core\Serialization\Yaml;
@@ -60,27 +59,26 @@ class MultisiteManagerForm extends FormBase {
   protected $queueType;
 
   /**
-   * The current domain when in a Domain Entity
+   * The current domain when in a Domain Entity.
    *
    * @var string
    */
   protected $currentDomain;
 
   /**
-   * The current domain id when in a Domain Entity
+   * The current domain id when in a Domain Entity.
    *
    * @var string
    */
   protected $currentDomainId;
 
   /**
-   * Config from multisite manager config
+   * Config from multisite manager config.
    *
    * @var \Drupal\Core\Config\ConfigManager
    */
   protected $config;
 
-  
   /**
    * Constructor.
    *
@@ -88,6 +86,14 @@ class MultisiteManagerForm extends FormBase {
    *   Queue factory service to get new/existing queues for use.
    * @param \Drupal\Core\Database\Connection $database
    *   The database connection to be used.
+   * @param \Drupal\Core\CronInterface $cron
+   *   The cron interface to be used.
+   * @param \Drupal\Core\Site\Settings $settings
+   *   The drupal site settings to be used.
+   * @param \Drupal\Core\Cache\CacheBackendInterface $cache_backend
+   *   The cache backend to be used.
+   * @param \Drupal\Core\Config\ConfigFactory $config
+   *   The config factory to be used.
    */
   public function __construct(QueueFactory $queue_factory, Connection $database, CronInterface $cron, Settings $settings, CacheBackendInterface $cache_backend, ConfigFactory $config) {
     $this->queueFactory = $queue_factory;
@@ -119,7 +125,6 @@ class MultisiteManagerForm extends FormBase {
     $this->currentDomain = $domain;
     $this->currentDomainId = $domain_id;
     $actions = $this->getOptionsQueue();
-    
     $form['status_fieldset'] = [
       '#type' => 'details',
       '#title' => $this->t('Action status'),
@@ -143,7 +148,8 @@ class MultisiteManagerForm extends FormBase {
         '#value' => $this->t('Delete selected items'),
         '#submit' => ['::submitDeleteItems'],
       ];
-    } else {
+    }
+    else {
       $form['status_fieldset']['status'] = [
         '#type' => 'markup',
         '#markup' => $this->t('There are no items in the queue.'),
@@ -159,8 +165,10 @@ class MultisiteManagerForm extends FormBase {
       '#type' => 'tableselect',
       '#header' => [
         'domain' => [
-          'data' => $this->t('Domain'),]],
-      '#default_value' =>  array_combine([$this->currentDomain], [$this->currentDomain]),
+          'data' => $this->t('Domain'),
+        ],
+      ],
+      '#default_value' => array_combine([$this->currentDomain], [$this->currentDomain]),
       '#options' => $this->getOptionsDomain($this->currentDomain),
       '#access' => $this->currentDomain ? FALSE : TRUE,
       '#empty' => $this->t('No domains created yet.'),
@@ -185,18 +193,19 @@ class MultisiteManagerForm extends FormBase {
       ],
     ];
     $header = [
-        'name' => $this->t('Name'),
-        'version' => $this->t('Version'),
-        'package' => $this->t('Package'),];
-    if($this->currentDomain) {
+      'name' => $this->t('Name'),
+      'version' => $this->t('Version'),
+      'package' => $this->t('Package'),
+    ];
+    if ($this->currentDomain) {
       $header['status'] = $this->t('Status');
     }
     $form['action_fieldset']['details_module']['modules'] = [
       '#type' => 'tableselect',
-      '#options' =>  $this->getModules(),
+      '#options' => $this->getModules(),
       '#header' => $header,
       '#empty' => 'Modules not found.',
-      '#prefix' => 'Note: After run cron, clean the cache to see the modules status change'
+      '#prefix' => 'Note: After run cron, clean the cache to see the modules status change',
     ];
     $form['action_fieldset']['custom'] = [
       '#type' => 'textfield',
@@ -215,9 +224,9 @@ class MultisiteManagerForm extends FormBase {
       '#description' => $this->t('Put the time in seconds. Ex.: "60" for 1 minute, "3600" for one hour. This time is only valid if cron runs during this time period.'),
     ];
     $form['action_fieldset']['submit'] = [
-        '#type' => 'submit',
-        '#validate' => ['::actionValidate'],
-        '#value' => $this->t('Add action'),
+      '#type' => 'submit',
+      '#validate' => ['::actionValidate'],
+      '#value' => $this->t('Add action'),
     ];
 
     return $form;
@@ -244,7 +253,7 @@ class MultisiteManagerForm extends FormBase {
     ];
 
     $custom_actions = Yaml::decode($this->config->get('custom_command'));
-    if(count($custom_actions) > 0) {
+    if (count($custom_actions) > 0) {
       foreach ($custom_actions as $key_action => $action) {
         $actions[$key_action] = $action;
       }
@@ -262,18 +271,18 @@ class MultisiteManagerForm extends FormBase {
    */
   public function actionValidate(array &$form, FormStateInterface $form_state) {
     $domains = array_filter($form_state->getValue('domains'), 'is_string');
-    if(empty($domains)) {
+    if (empty($domains)) {
       $form_state->setErrorByName('domains', $this->t('Please, select a domain to add action.'));
     }
 
     $action = $form_state->getValue('action');
     $custom = $form_state->getValue('custom');
-    if($action == 'custom' && !$custom) {
+    if ($action == 'custom' && !$custom) {
       $form_state->setErrorByName('custom', $this->t('Please, set a custom drush command.'));
     }
 
     $modules = array_filter($form_state->getValue('modules'), 'is_string');
-    if(($action == 'pmu' || $action == 'en') && !$modules) {
+    if (($action == 'pmu' || $action == 'en') && !$modules) {
       $form_state->setErrorByName('modules', $this->t('Please, select a module.'));
     }
   }
@@ -288,7 +297,7 @@ class MultisiteManagerForm extends FormBase {
    */
   public function deleteActionValidate(array &$form, FormStateInterface $form_state) {
     $action = array_filter($form_state->getValue('action_status'), 'is_string');
-    if(empty($action)) {
+    if (empty($action)) {
       $form_state->setErrorByName('action_status', $this->t('Please, select an action status to delete.'));
     }
   }
@@ -303,28 +312,41 @@ class MultisiteManagerForm extends FormBase {
     $data['action'] = $action;
     $data['action_key'] = $action;
 
-    /**
-     * If action is custom, then action retrieve value from "Custom drush command"
+    /*
+     * If action is custom,
+     * then action retrieve value from "Custom drush command"
      */
-    if($action == 'custom') {
+    if ($action == 'custom') {
       $data['action'] = $form_state->getValue('custom');
     }
 
-    /**
-     * If action is "pmu" or "en", then add action queue for each module
+    /*
+     * If action is "pmu" or "en",
+     * then add action queue for each module
      */
-    if($action == 'pmu' || $action == 'en') {
+    if ($action == 'pmu' || $action == 'en') {
       $modules = array_filter($form_state->getValue('modules'), 'is_string');
       foreach ($modules as $module) {
         $data['action'] = $action . ' ' . $module . ' -y';
         $this->addActionQueue($domains, $data, $claim_time);
       }
-    }else {
+    }
+    else {
       $this->addActionQueue($domains, $data, $claim_time);
     }
 
   }
 
+  /**
+   * Add the Queue.
+   *
+   * @param array $domains
+   *   Selected domains from form.
+   * @param array $data
+   *   Command action to queue.
+   * @param string $claim_time
+   *   Expiry time to execute action.
+   */
   public function addActionQueue(array $domains, array $data, string $claim_time) {
     foreach ($domains as $domain) {
       $data['domain'] = $domain;
@@ -340,30 +362,35 @@ class MultisiteManagerForm extends FormBase {
    */
   public function getOptionsDomain() {
     $query = $this->database->select('domain_entity', 'm');
-    $query->fields('m', ['domain','name','id']);
+    $query->fields('m', ['domain', 'name', 'id']);
     $result = $query->execute()->fetchAll();
-    
     $domains = [];
     foreach ($result as $domain) {
-      $domains[$domain->domain] =  ['domain' => [
-        'data' => [
-          '#type' => 'link',
-          '#title' => $domain->name,
-          '#url' => Url::fromUri('internal:/admin/structure/domain-entity/' . $domain->id)]
-        ]];
+      $domains[$domain->domain] = [
+        'domain' => [
+          'data' => [
+            '#type' => 'link',
+            '#title' => $domain->name,
+            '#url' => Url::fromUri('internal:/admin/structure/domain-entity/' . $domain->id),
+          ],
+        ],
+      ];
     }
 
     return $domains;
   }
 
+  /**
+   * Retrieves the modules list.
+   */
   public function getModules() {
     $domain = $this->currentDomain;
     $domain_id = $this->currentDomainId;
     $drush = $this->config->get('drush');
     $cid = 'mam_modules_domain' . $domain_id;
-    $data = array();
+    $data = [];
 
-    if(empty($drush)) {
+    if (empty($drush)) {
       drupal_set_message($this->t('Set the drush installation in tab Settings'), 'warning');
       return $data;
     }
@@ -374,7 +401,7 @@ class MultisiteManagerForm extends FormBase {
     else {
       $command = $domain ? ' -l ' . $domain : '';
       exec($drush . ' pm-list --type=Module --format=php' . $command . ' 2>&1', $modules);
-      if(count($modules) > 0) {
+      if (count($modules) > 0) {
         $data = unserialize($modules[0]);
       }
       $this->cacheBackend->set($cid, $data, Cache::PERMANENT, ['domain_entity:' . $domain_id]);
@@ -388,11 +415,16 @@ class MultisiteManagerForm extends FormBase {
    */
   public function getOptionsQueue() {
     $items = $this->retrieveQueue('multisite_queue');
-    $result = array_map(array($this, 'processQueueItemForTable'), $items);
+    $result = array_map([$this, 'processQueueItemForTable'], $items);
 
-    $queues = array();
+    $queues = [];
     foreach ($result as $value) {
-      $queues[$value['item_id']] = array($value['domain'], $value['action'], $value['expire'], $value['created']);
+      $queues[$value['item_id']] = [
+        $value['domain'],
+        $value['action'],
+        $value['expire'],
+        $value['created'],
+      ];
     }
 
     return $queues;
@@ -412,15 +444,19 @@ class MultisiteManagerForm extends FormBase {
    *   An array of item arrays.
    */
   public function retrieveQueue($queue_name) {
-    $items = array();
+    $items = [];
 
     // Make sure there are queue items available. The queue will not create our
     // database table if there are no items.
     if ($this->queueFactory->get($queue_name)->numberOfItems() >= 1) {
       $result = $this->database->query('SELECT item_id, data, expire, created FROM {' . DatabaseQueue::TABLE_NAME . '} WHERE name = :name AND data LIKE :domain ORDER BY item_id',
-        [':name' => 'multisite_queue',
-        ':domain' => '%' . $this->currentDomain . '%'],
-        ['fetch' => \PDO::FETCH_ASSOC]
+        [
+          ':name' => 'multisite_queue',
+          ':domain' => '%' . $this->currentDomain . '%',
+        ],
+        [
+          'fetch' => \PDO::FETCH_ASSOC,
+        ],
       );
       foreach ($result as $item) {
         $items[] = $item;
@@ -442,12 +478,11 @@ class MultisiteManagerForm extends FormBase {
    */
   private function processQueueItemForTable(array $item) {
     if ($item['expire'] > 0) {
-      $item['expire'] = $this->t('Claimed: expires %expire', array('%expire' => date('r', $item['expire'])));
+      $item['expire'] = $this->t('Claimed: expires %expire', ['%expire' => date('r', $item['expire'])]);
     }
     else {
       $item['expire'] = $this->t('Unclaimed');
     }
-    
     $items = unserialize($item['data']);
     $domain = $items['domain'];
     $actions = $this->getOptionsAction();
@@ -457,11 +492,10 @@ class MultisiteManagerForm extends FormBase {
         $action[$group_key] = $group_value;
       }
     }
- 
-    $action_info = $action[$items['action_key']] . ' (' .$items['action'] . ')';
+    $action_info = $action[$items['action_key']] . ' (' . $items['action'] . ')';
     $item['created'] = date('r', $item['created']);
     $item['domain'] = $domain;
-    $item['action'] =  $action_info;
+    $item['action'] = $action_info;
 
     return $item;
   }
@@ -476,16 +510,15 @@ class MultisiteManagerForm extends FormBase {
    */
   public function submitDeleteItems(array &$form, FormStateInterface $form_state) {
     $status = $form_state->getValue('action_status');
-    $items_id = array_filter($status, 'is_string'); 
-    
+    $items_id = array_filter($status, 'is_string');
     try {
       $query = $this->database->delete('queue');
       $query->condition('item_id', $items_id, 'IN');
       $query->execute();
-      
       drupal_set_message($this->t('Items deleted!'));
-    } catch (Exception $e) {
-      drupal_set_message($this->t('Error deleting items @error', array('@error' => $e)), 'error');
+    }
+    catch (Exception $e) {
+      drupal_set_message($this->t('Error deleting items @error', ['@error' => $e]), 'error');
     }
 
     $form_state->setRebuild();
