@@ -456,7 +456,7 @@ class MultisiteManagerForm extends FormBase {
         ],
         [
           'fetch' => \PDO::FETCH_ASSOC,
-        ],
+        ]
       );
       foreach ($result as $item) {
         $items[] = $item;
